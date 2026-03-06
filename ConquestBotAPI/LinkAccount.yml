@@ -1,0 +1,23 @@
+info:
+  name: LinkAccount
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{host}}/members/link"
+  body:
+    type: json
+    data: |-
+      {
+        "linkingCode": "1M6LEXOW",
+        "minecraftUuid": "31ae429d-9eb5-37e0-9098-a3e25d32597e",
+        "minecraftName": "albercl"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

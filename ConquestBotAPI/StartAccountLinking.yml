@@ -1,0 +1,22 @@
+info:
+  name: StartAccountLinking
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{host}}/members"
+  body:
+    type: json
+    data: |-
+      {
+        "discordId": "732901164995313675",
+        "discordName": "Alber"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

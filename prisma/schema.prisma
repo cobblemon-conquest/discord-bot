@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/common/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model ConquestGuild {
+  id      String   @id
+  members Member[]
+
+  @@map("conquest_guild")
+}
+
+model Member {
+  id            Int            @id @default(autoincrement())
+  discordId     String         @unique
+  discordName   String
+  minecraftUuid String?        @unique
+  minecraftName String?
+  guildId       String?
+  guildJoinedAt DateTime?
+  guild         ConquestGuild? @relation(fields: [guildId], references: [id])
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@map("member")
+}
+
+model DeadLetter {
+  id        Int      @id @default(autoincrement())
+  type      String
+  payload   Json
+  error     String
+  createdAt DateTime @default(now())
+
+  @@map("dead_letter")
+}
