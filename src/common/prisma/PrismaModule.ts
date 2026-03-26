@@ -1,5 +1,5 @@
-import { DynamicModule, Global, Module } from "@nestjs/common";
-import { PrismaService } from "./PrismaService";
+import { DynamicModule, Global, Module } from '@nestjs/common';
+import { PrismaService } from './PrismaService';
 
 @Global()
 @Module({
@@ -10,13 +10,12 @@ import { PrismaService } from "./PrismaService";
 })
 export class PrismaModule {
   static forRoot(): DynamicModule {
-    
     const providers = [
       {
         provide: PrismaService,
         useClass: PrismaService,
       },
-    ]
+    ];
 
     return {
       module: PrismaModule,

@@ -15,7 +15,8 @@ export class InMemoryLinkingCodeRepository implements LinkingCodeRepository {
   private readonly codeExpirationTimeMs: number;
 
   constructor() {
-    this.codeExpirationTimeMs = Number(process.env.CODE_EXPIRATION_TIME_MS) || 60 * 60 * 1000;
+    this.codeExpirationTimeMs =
+      Number(process.env.CODE_EXPIRATION_TIME_MS) || 60 * 60 * 1000;
   }
 
   async generateAndSaveCode(discordId: string): Promise<string> {
@@ -23,7 +24,7 @@ export class InMemoryLinkingCodeRepository implements LinkingCodeRepository {
 
     const code = this.generateUniqueCode();
     const expirationTime = Date.now() + this.codeExpirationTimeMs;
-    
+
     this.storeCode(code, { discordId, expirationTime });
     this.discordIdToCode.set(discordId, code);
 
@@ -32,7 +33,7 @@ export class InMemoryLinkingCodeRepository implements LinkingCodeRepository {
 
   async findDiscordIdByCode(code: string): Promise<string | null> {
     const codeData = this.getCode(code);
-    
+
     if (!codeData) {
       return null;
     }
@@ -47,13 +48,13 @@ export class InMemoryLinkingCodeRepository implements LinkingCodeRepository {
 
   async findCodeByDiscordId(discordId: string): Promise<string | null> {
     const code = this.discordIdToCode.get(discordId);
-    
+
     if (!code) {
       return null;
     }
 
     const codeData = this.getCode(code);
-    
+
     if (!codeData || this.isExpired(codeData)) {
       await this.invalidateCode(code);
       return null;
@@ -64,7 +65,7 @@ export class InMemoryLinkingCodeRepository implements LinkingCodeRepository {
 
   async invalidateCode(code: string): Promise<void> {
     const codeData = this.codes.get(code);
-    
+
     if (codeData) {
       this.removeCode(code, codeData.discordId);
     }
@@ -74,7 +75,7 @@ export class InMemoryLinkingCodeRepository implements LinkingCodeRepository {
 
   private invalidateExistingCode(discordId: string): void {
     const existingCode = this.discordIdToCode.get(discordId);
-    
+
     if (existingCode) {
       this.removeCode(existingCode, discordId);
     }
@@ -113,11 +114,11 @@ export class InMemoryLinkingCodeRepository implements LinkingCodeRepository {
 
   private generateRandomCode(chars: string): string {
     let code = '';
-    
+
     for (let i = 0; i < 8; i++) {
       code += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-    
+
     return code;
   }
 

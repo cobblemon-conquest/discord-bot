@@ -5,10 +5,10 @@ info:
 
 http:
   method: POST
-  url: "{{host}}/exceptions/discord/retry-dead-letter/:id"
+  url: '{{host}}/exceptions/discord/retry-dead-letter/:id'
   params:
     - name: id
-      value: "1"
+      value: '1'
       type: path
   auth: inherit
 

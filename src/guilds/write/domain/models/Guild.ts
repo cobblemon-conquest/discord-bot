@@ -1,6 +1,3 @@
-import { AggregateRoot } from "@nestjs/cqrs";
+import { AggregateRoot } from '@nestjs/cqrs';
 
-export class Guild extends AggregateRoot {
-
-    
-}
+export class Guild extends AggregateRoot {}

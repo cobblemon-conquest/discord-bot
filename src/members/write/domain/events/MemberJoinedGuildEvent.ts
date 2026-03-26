@@ -1,8 +1,8 @@
 export class MemberJoinedGuildEvent {
-    static readonly eventName = 'member.joinedGuild';
+  static readonly eventName = 'member.joinedGuild';
 
-    constructor(
-        public readonly discordId: string,
-        public readonly minecraftUuid: string,
-    ) {}
+  constructor(
+    public readonly discordId: string,
+    public readonly minecraftUuid: string,
+  ) {}
 }
