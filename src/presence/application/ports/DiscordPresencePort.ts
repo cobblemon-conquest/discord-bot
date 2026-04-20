@@ -1,6 +1,6 @@
 export const DiscordPresencePortToken = Symbol('DiscordPresencePort');
 
 export interface DiscordPresencePort {
-  setOnlinePlayers(onlinePlayers: number): Promise<void>;
-  setOffline(): Promise<void>;
+  setOnlinePlayers(onlinePlayers: number): Promise<boolean>;
+  setOffline(): Promise<boolean>;
 }

@@ -38,7 +38,16 @@ export class RefreshDiscordPresenceHandler {
         state.isOffline || state.lastOnlinePlayers !== onlinePlayers;
 
       if (shouldUpdatePresence) {
-        await this.discordPresencePort.setOnlinePlayers(onlinePlayers);
+        const presenceApplied =
+          await this.discordPresencePort.setOnlinePlayers(onlinePlayers);
+
+        if (!presenceApplied) {
+          this.logger.warn(
+            `Discord client is not ready yet. Deferred presence sync for ${onlinePlayers} players online.`,
+          );
+          return;
+        }
+
         this.logger.log(`Updated Discord presence to ${onlinePlayers} players online.`);
       }
 
@@ -53,7 +62,14 @@ export class RefreshDiscordPresenceHandler {
         !state.isOffline && nextFailures >= this.failureThreshold;
 
       if (shouldMarkOffline) {
-        await this.discordPresencePort.setOffline();
+        const presenceApplied = await this.discordPresencePort.setOffline();
+
+        if (!presenceApplied) {
+          this.logger.warn(
+            'Discord client is not ready yet. Deferred offline presence sync.',
+          );
+        }
+
         this.logger.warn(
           `Server health check failed ${nextFailures} times. Marked Discord presence as offline.`,
         );

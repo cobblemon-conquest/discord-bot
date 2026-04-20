@@ -8,11 +8,11 @@ export class DiscordPresenceAdapter implements DiscordPresencePort {
 
   constructor(private readonly client: Client) {}
 
-  async setOnlinePlayers(onlinePlayers: number): Promise<void> {
+  async setOnlinePlayers(onlinePlayers: number): Promise<boolean> {
     const botUser = this.client.user;
     if (!botUser) {
       this.logger.warn('Discord client is not ready yet. Skipping presence update.');
-      return;
+      return false;
     }
 
     botUser.setPresence({
@@ -24,15 +24,17 @@ export class DiscordPresenceAdapter implements DiscordPresencePort {
         }
       ],
     });
+
+    return true;
   }
 
-  async setOffline(): Promise<void> {
+  async setOffline(): Promise<boolean> {
     const botUser = this.client.user;
     if (!botUser) {
       this.logger.warn(
         'Discord client is not ready yet. Skipping offline presence update.',
       );
-      return;
+      return false;
     }
 
     botUser.setPresence({
@@ -44,5 +46,7 @@ export class DiscordPresenceAdapter implements DiscordPresencePort {
         },
       ],
     });
+
+    return true;
   }
 }
