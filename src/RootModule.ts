@@ -8,6 +8,8 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { PrismaModule } from './common/prisma/PrismaModule';
 import { ExceptionsModule } from './common/exceptions/ExceptionsModule';
 import { DiscordBotUpdates } from './common/DiscordBotUpdates';
+import { PresenceModule } from './presence/PresenceModule';
+import { HealthController } from './common/health/HealthController';
 
 @Module({
   imports: [
@@ -22,6 +24,7 @@ import { DiscordBotUpdates } from './common/DiscordBotUpdates';
         IntentsBitField.Flags.Guilds,
         IntentsBitField.Flags.GuildMessages,
         IntentsBitField.Flags.DirectMessages,
+        IntentsBitField.Flags.GuildPresences
       ],
       development: process.env.DISCORD_DEVELOPMENT_GUILD_ID
         ? [process.env.DISCORD_DEVELOPMENT_GUILD_ID]
@@ -29,8 +32,9 @@ import { DiscordBotUpdates } from './common/DiscordBotUpdates';
       skipRegistration: false,
     }),
     MemberModule,
+    PresenceModule,
   ],
-  controllers: [],
+  controllers: [HealthController],
   providers: [DiscordBotUpdates],
 })
 export class RootModule {}

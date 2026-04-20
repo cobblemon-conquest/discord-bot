@@ -1,4 +1,4 @@
-import { Body, Controller, Logger, Post, Req } from '@nestjs/common';
+import { Body, Controller, Logger, Post } from '@nestjs/common';
 import {
   LinkMinecraftAccountDto,
   StartAccountLinkingDto,
