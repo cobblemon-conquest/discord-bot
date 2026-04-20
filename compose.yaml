@@ -1,0 +1,19 @@
+services:
+  database:
+    image: postgres:18.2
+    container_name: cobblemon-conquest-database
+    pull_policy: daily
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: cobblemon_conquest
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: cobblemonpassword
+    volumes:
+      - ./data/database:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin --dbname cobblemon_conquest"]
+      interval: 5s
+      timeout: 5s
+      retries: 10

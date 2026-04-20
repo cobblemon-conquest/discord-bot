@@ -1,5 +1,4 @@
 import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { DiscoveryService } from '@nestjs/core';
 import {
   EventBus,
   UnhandledExceptionBus,
