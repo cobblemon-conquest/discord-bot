@@ -1,4 +1,4 @@
-import { OtpCodeUtility } from '../../application/utils/OtpCodeUtility';
+import { OtpCodeUtility } from '../utils/OtpCodeUtility';
 
 export class OtpDefinition {
   public constructor(
