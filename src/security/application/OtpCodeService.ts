@@ -11,6 +11,12 @@ export class OtpCodeService {
   ) {}
 
   public getOtpCode(otpName: string): string | null {
-    return this.otpDefinitionRepository.findByName(otpName)?.getCode() ?? null;
+    const otpDefinition = this.otpDefinitionRepository.findByName(otpName);
+
+    if (!otpDefinition) {
+      return null;
+    }
+
+    return otpDefinition.getCode();
   }
 }

@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
 import { OtpDefinition } from '../../domain/models/OtpDefinition';
-import { OtpCodeUtility } from '../../application/utils/OtpCodeUtility';
+import { OtpCodeUtility } from '../../domain/utils/OtpCodeUtility';
 import { OtpDefinitionRepository } from '../../application/ports/OtpDefinitionRepository';
+import { OtpDefinitionUtility } from '../../application/utils/OtpDefinitionUtility';
 
 @Injectable()
 export class OtpEnvironmentRepositoryAdapter implements OtpDefinitionRepository {
@@ -15,14 +16,8 @@ export class OtpEnvironmentRepositoryAdapter implements OtpDefinitionRepository 
   private loadOtpDefinitions(): Map<string, OtpDefinition> {
     const definitions = new Map<string, OtpDefinition>();
 
-    for (const [key, value] of Object.entries(process.env)) {
-      const match = key.match(/^OTP_([A-Z0-9_]+)_SECRET$/);
-      if (!match || !value) {
-        continue;
-      }
-
-      const name = OtpCodeUtility.normalizeOtpName(match[1]);
-      definitions.set(name, new OtpDefinition(name, value));
+    for (const [serviceName, secret] of OtpDefinitionUtility.loadOtpSecrets()) {
+      definitions.set(serviceName, new OtpDefinition(serviceName, secret));
     }
 
     return definitions;
