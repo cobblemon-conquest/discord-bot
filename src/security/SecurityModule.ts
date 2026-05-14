@@ -5,8 +5,7 @@ import { OtpDefinitionRepositoryToken } from './application/ports/OtpDefinitionR
 import { PasswordAccessService } from './application/PasswordAccessService';
 import { PasswordAccessTokenRepositoryToken } from './application/ports/PasswordAccessTokenRepository';
 import { PasswordDefinitionRepositoryToken } from './application/ports/PasswordDefinitionRepository';
-import { createSecurityOtpCommandProviders } from './adapters/discord/SecurityDiscordAdapter';
-import { createSecurityPasswordCommandProviders } from './adapters/discord/createSecurityPasswordCommandProviders';
+import { SecurityPrefixCommandAdapter } from './adapters/discord/SecurityPrefixCommandAdapter';
 import { OtpEnvironmentRepositoryAdapter } from './adapters/environment/OtpEnvironmentRepositoryAdapter';
 import { PasswordEnvironmentRepositoryAdapter } from './adapters/environment/PasswordEnvironmentRepositoryAdapter';
 import { InMemoryPasswordAccessTokenRepository } from './adapters/memory-database/InMemoryPasswordAccessTokenRepository';
@@ -17,6 +16,7 @@ import { SecurityController } from './adapters/http/SecurityController';
   providers: [
     OtpCodeService,
     PasswordAccessService,
+    SecurityPrefixCommandAdapter,
     {
       provide: OtpDefinitionRepositoryToken,
       useClass: OtpEnvironmentRepositoryAdapter,
@@ -29,8 +29,6 @@ import { SecurityController } from './adapters/http/SecurityController';
       provide: PasswordAccessTokenRepositoryToken,
       useClass: InMemoryPasswordAccessTokenRepository,
     },
-    ...createSecurityOtpCommandProviders(),
-    ...createSecurityPasswordCommandProviders(),
   ],
 })
 export class SecurityModule {}

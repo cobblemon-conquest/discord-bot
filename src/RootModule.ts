@@ -25,7 +25,8 @@ import { HealthController } from './common/health/HealthController';
         IntentsBitField.Flags.Guilds,
         IntentsBitField.Flags.GuildMessages,
         IntentsBitField.Flags.DirectMessages,
-        IntentsBitField.Flags.GuildPresences
+        IntentsBitField.Flags.GuildPresences,
+        IntentsBitField.Flags.MessageContent,
       ],
       development: process.env.DISCORD_DEVELOPMENT_GUILD_ID
         ? [process.env.DISCORD_DEVELOPMENT_GUILD_ID]
