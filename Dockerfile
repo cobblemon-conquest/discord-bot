@@ -9,13 +9,13 @@ WORKDIR /app
 
 FROM base AS deps
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 
 FROM deps AS build
 
 COPY . .
-RUN pnpm run build
+RUN CI=true pnpm run build
 RUN CI=true pnpm prune --prod
 
 FROM node:22-alpine AS runtime

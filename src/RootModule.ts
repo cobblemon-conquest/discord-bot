@@ -9,6 +9,7 @@ import { PrismaModule } from './common/prisma/PrismaModule';
 import { ExceptionsModule } from './common/exceptions/ExceptionsModule';
 import { DiscordBotUpdates } from './common/DiscordBotUpdates';
 import { PresenceModule } from './presence/PresenceModule';
+import { SecurityModule } from './security/SecurityModule';
 import { HealthController } from './common/health/HealthController';
 
 @Module({
@@ -33,6 +34,7 @@ import { HealthController } from './common/health/HealthController';
     }),
     MemberModule,
     PresenceModule,
+    SecurityModule,
   ],
   controllers: [HealthController],
   providers: [DiscordBotUpdates],
