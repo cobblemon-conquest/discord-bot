@@ -191,7 +191,7 @@ export class SecurityPrefixCommandAdapter {
       message,
       `**Enlace de acceso — NO compartir**\n` +
         `Servicio: **${serviceName}**\n` +
-        `Enlace (valido 1 minuto): \`${accessUrl}\`\n\n` +
+        `Enlace (valido 1 minuto): <${accessUrl}>\n\n` +
         `No compartas este enlace con nadie.`,
     );
 
