@@ -1,4 +1,4 @@
-import { Injectable, type Type } from '@nestjs/common';
+import { Injectable, Logger, type Type } from '@nestjs/common';
 import { Context, Subcommand, createCommandGroupDecorator } from 'necord';
 import type { SlashCommandContext } from 'necord';
 import { ApplicationIntegrationType, MessageFlags, type ChatInputCommandInteraction } from 'discord.js';
@@ -21,6 +21,8 @@ export function createSecurityPasswordCommandProviders(): Type<unknown>[] {
     })
     @Injectable()
     class SecurityPasswordCommandProvider {
+      public readonly logger = new Logger(SecurityPasswordCommandProvider.name);
+
       public constructor(private readonly passwordAccessService: PasswordAccessService) {}
 
       @Subcommand({
@@ -35,7 +37,14 @@ export function createSecurityPasswordCommandProviders(): Type<unknown>[] {
         interaction: ChatInputCommandInteraction,
         normalizedServiceName: string,
       ) {
+        this.logger.log(
+          `Credentials command requested | service=${normalizedServiceName} userId=${interaction.user.id} guildId=${interaction.guildId ?? 'dm'}`,
+        );
+
         if (!isSecurityAuthorized(interaction)) {
+          this.logger.warn(
+            `Credentials command denied (unauthorized) | service=${normalizedServiceName} userId=${interaction.user.id} guildId=${interaction.guildId ?? 'dm'}`,
+          );
           return interaction.reply({
             content: 'No tienes permisos para usar este comando.',
             flags: MessageFlags.Ephemeral,
@@ -47,11 +56,18 @@ export function createSecurityPasswordCommandProviders(): Type<unknown>[] {
         );
 
         if (!accessUrl) {
+          this.logger.warn(
+            `Credentials command failed (missing config) | service=${normalizedServiceName} userId=${interaction.user.id} guildId=${interaction.guildId ?? 'dm'}`,
+          );
           return interaction.reply({
             content: `No hay credenciales configuradas para \`${normalizedServiceName}\`.`,
             flags: MessageFlags.Ephemeral,
           });
         }
+
+        this.logger.log(
+          `Credentials command succeeded | service=${normalizedServiceName} userId=${interaction.user.id} guildId=${interaction.guildId ?? 'dm'}`,
+        );
 
         return interaction.reply({
           content:

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, type Type } from '@nestjs/common';
 import {
   ApplicationIntegrationType,
   MessageFlags,
@@ -17,7 +17,7 @@ const SecurityCommands = createCommandGroupDecorator({
   integrationTypes: [ApplicationIntegrationType.GuildInstall],
 });
 
-export function createSecurityOtpCommandProviders() {
+export function createSecurityOtpCommandProviders(): Type<unknown>[] {
   return OtpDefinitionUtility.getConfiguredServiceNames().map(serviceName => {
     @SecurityCommands({
       name: serviceName,
@@ -25,6 +25,8 @@ export function createSecurityOtpCommandProviders() {
     })
     @Injectable()
     class SecurityOtpCommandProvider {
+      public readonly logger = new Logger(SecurityOtpCommandProvider.name);
+
       public constructor(public readonly otpCodeService: OtpCodeService) {}
 
       @Subcommand({
@@ -36,7 +38,14 @@ export function createSecurityOtpCommandProviders() {
       }
 
       public async replyWithOtp(interaction: ChatInputCommandInteraction, otpName: string) {
+        this.logger.log(
+          `OTP command requested | service=${otpName} userId=${interaction.user.id} guildId=${interaction.guildId ?? 'dm'}`,
+        );
+
         if (!isSecurityAuthorized(interaction)) {
+          this.logger.warn(
+            `OTP command denied (unauthorized) | service=${otpName} userId=${interaction.user.id} guildId=${interaction.guildId ?? 'dm'}`,
+          );
           return interaction.reply({
             content: 'No tienes permisos para usar este comando.',
             flags: MessageFlags.Ephemeral,
@@ -45,11 +54,18 @@ export function createSecurityOtpCommandProviders() {
 
         const otpCode = this.otpCodeService.getOtpCode(otpName);
         if (!otpCode) {
+          this.logger.warn(
+            `OTP command failed (missing config) | service=${otpName} userId=${interaction.user.id} guildId=${interaction.guildId ?? 'dm'}`,
+          );
           return interaction.reply({
             content: `No hay una OTP configurada para \`${otpName}\`.`,
             flags: MessageFlags.Ephemeral,
           });
         }
+
+        this.logger.log(
+          `OTP command succeeded | service=${otpName} userId=${interaction.user.id} guildId=${interaction.guildId ?? 'dm'}`,
+        );
 
         return interaction.reply({
           content:
