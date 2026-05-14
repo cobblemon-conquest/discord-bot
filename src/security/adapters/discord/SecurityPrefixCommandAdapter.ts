@@ -34,6 +34,13 @@ export class SecurityPrefixCommandAdapter {
       return;
     }
 
+    if (!(await this.isAuthorizedInGuild(message))) {
+      this.logger.warn(
+        `Ignoring unauthorized message | authorId=${message.author.id} guildId=${message.guildId} contentPreview=${this.previewContent(message.content)}`,
+      );
+      return;
+    }
+
     const trimmed = message.content.trim();
     const hasSecurityPrefix = trimmed.toLowerCase().startsWith(this.prefix);
 
@@ -57,14 +64,6 @@ export class SecurityPrefixCommandAdapter {
     this.logger.log(
       `Prefix security command requested | action=${action} service=${serviceName} userId=${message.author.id} guildId=${message.guildId}`,
     );
-
-    if (!(await this.isAuthorizedInGuild(message))) {
-      this.logger.warn(
-        `Prefix security command denied (unauthorized) | action=${action} service=${serviceName} userId=${message.author.id} guildId=${message.guildId}`,
-      );
-      await this.safeReply(message, 'No tienes permisos para usar este comando.');
-      return;
-    }
 
     if (action === 'otp') {
       await this.sendOtp(message, serviceName);
